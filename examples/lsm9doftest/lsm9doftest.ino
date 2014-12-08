@@ -4,7 +4,7 @@
 #include <Adafruit_Sensor.h>  // not used in this demo but required!
 
 // i2c
-Adafruit_LSM9DS0 lsm = Adafruit_LSM9DS0();
+Adafruit_LSM9DS0 lsm = Adafruit_LSM9DS0(5000);
 
 // You can also use software SPI
 //Adafruit_LSM9DS0 lsm = Adafruit_LSM9DS0(13, 12, 11, 10, 9);
@@ -14,31 +14,20 @@ Adafruit_LSM9DS0 lsm = Adafruit_LSM9DS0();
 void setupSensor()
 {
   // 1.) Set the accelerometer range
-  lsm.setupAccel(lsm.LSM9DS0_ACCELRANGE_2G);
-  //lsm.setupAccel(lsm.LSM9DS0_ACCELRANGE_4G);
-  //lsm.setupAccel(lsm.LSM9DS0_ACCELRANGE_6G);
-  //lsm.setupAccel(lsm.LSM9DS0_ACCELRANGE_8G);
-  //lsm.setupAccel(lsm.LSM9DS0_ACCELRANGE_16G);
-  
+  lsm.setupAccel(lsm.LSM9DS0_ACCELRANGE_4G);
   // 2.) Set the magnetometer sensitivity
   lsm.setupMag(lsm.LSM9DS0_MAGGAIN_2GAUSS);
-  //lsm.setupMag(lsm.LSM9DS0_MAGGAIN_4GAUSS);
-  //lsm.setupMag(lsm.LSM9DS0_MAGGAIN_8GAUSS);
-  //lsm.setupMag(lsm.LSM9DS0_MAGGAIN_12GAUSS);
-
   // 3.) Setup the gyroscope
   lsm.setupGyro(lsm.LSM9DS0_GYROSCALE_245DPS);
-  //lsm.setupGyro(lsm.LSM9DS0_GYROSCALE_500DPS);
-  //lsm.setupGyro(lsm.LSM9DS0_GYROSCALE_2000DPS);
 }
 
-void setup() 
+void setup()
 {
   while (!Serial); // flora & leonardo
-  
+
   Serial.begin(9600);
   Serial.println("LSM raw read demo");
-  
+
   // Try to initialise and warn if we couldn't detect the chip
   if (!lsm.begin())
   {
@@ -50,7 +39,7 @@ void setup()
   Serial.println("");
 }
 
-void loop() 
+void loop()
 {
   lsm.read();
 

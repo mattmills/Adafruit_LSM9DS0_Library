@@ -9,7 +9,7 @@
   please support Adafruit andopen-source hardware by purchasing products
   from Adafruit!
 
-  Written by Kevin Townsend for Adafruit Industries.  
+  Written by Kevin Townsend for Adafruit Industries.
   BSD license, all text above must be included in any redistribution
  ***************************************************************************/
 #ifndef __LSM9DS0_H__
@@ -21,7 +21,6 @@
  #include "WProgram.h"
 #endif
 #include "Wire.h"
-#include <SPI.h>
 #include <Adafruit_Sensor.h>
 
 #define LSM9DS0_ADDRESS_ACCELMAG           (0x1D)         // 3B >> 1 = 7bit default
@@ -83,7 +82,7 @@ class Adafruit_LSM9DS0
       LSM9DS0_REGISTER_OUT_Z_L_G           = 0x2C,
       LSM9DS0_REGISTER_OUT_Z_H_G           = 0x2D,
     } lsm9ds0GyroRegisters_t;
-  
+
     typedef enum
     {
       LSM9DS0_REGISTER_TEMP_OUT_L_XM       = 0x05,
@@ -119,7 +118,7 @@ class Adafruit_LSM9DS0
       LSM9DS0_ACCELRANGE_8G                = (0b011 << 3),
       LSM9DS0_ACCELRANGE_16G               = (0b100 << 3)
     } lsm9ds0AccelRange_t;
-    
+
     typedef enum
     {
       LSM9DS0_ACCELDATARATE_POWERDOWN      = (0b0000 << 4),
@@ -134,7 +133,7 @@ class Adafruit_LSM9DS0
       LSM9DS0_ACCELDATARATE_800HZ          = (0b1001 << 4),
       LSM9DS0_ACCELDATARATE_1600HZ         = (0b1010 << 4)
     } lm9ds0AccelDataRate_t;
-    
+
     typedef enum
     {
       LSM9DS0_MAGGAIN_2GAUSS               = (0b00 << 5),  // +/- 2 gauss
@@ -142,7 +141,7 @@ class Adafruit_LSM9DS0
       LSM9DS0_MAGGAIN_8GAUSS               = (0b10 << 5),  // +/- 8 gauss
       LSM9DS0_MAGGAIN_12GAUSS              = (0b11 << 5)   // +/- 12 gauss
     } lsm9ds0MagGain_t;
-    
+
     typedef enum
     {
       LSM9DS0_MAGDATARATE_3_125HZ          = (0b000 << 2),
@@ -159,19 +158,19 @@ class Adafruit_LSM9DS0
       LSM9DS0_GYROSCALE_500DPS             = (0b01 << 4),  // +/- 500 degrees per second rotation
       LSM9DS0_GYROSCALE_2000DPS            = (0b10 << 4)   // +/- 2000 degrees per second rotation
     } lsm9ds0GyroScale_t;
-    
+
     typedef struct vector_s
     {
       float x;
       float y;
       float z;
     } lsm9ds0Vector_t;
-    
+
     lsm9ds0Vector_t accelData;    // Last read accelerometer data will be available here
     lsm9ds0Vector_t magData;      // Last read magnetometer data will be available here
     lsm9ds0Vector_t gyroData;     // Last read gyroscope data will be available here
     int16_t         temperature;  // Last read temperzture data will be available here
-    
+
     bool    begin       ( void );
     void    read        ( void );
     void    readAccel   ( void );
@@ -185,11 +184,11 @@ class Adafruit_LSM9DS0
     byte    read8       ( boolean type, byte reg);
     byte    readBuffer  ( boolean type, byte reg, byte len, uint8_t *buffer);
     uint8_t spixfer     ( uint8_t data );
-    
+
     /* Adafruit Unified Sensor Functions (not standard yet ... the current base class only */
     /* supports one sensor type, and we need to update the unified base class to support   */
     /* multiple sensors in a single driver, returning an array */
-    void getEvent  ( sensors_event_t* accel, sensors_event_t* mag, sensors_event_t* gyro, sensors_event_t* temp );    
+    void getEvent  ( sensors_event_t* accel, sensors_event_t* mag, sensors_event_t* gyro, sensors_event_t* temp );
     void getSensor ( sensor_t* accel, sensor_t* mag, sensor_t* gyro, sensor_t* temp );
 
     /* Subclass to expose each sensor on the LSM9DS0 as an Adafruit_Sensor instance. */
@@ -202,7 +201,7 @@ class Adafruit_LSM9DS0
         _eventFunc(copy._eventFunc),
         _sensorFunc(copy._sensorFunc)
       {}
-      Sensor(Adafruit_LSM9DS0* parent, lsm9ds0_read_func readFunc, 
+      Sensor(Adafruit_LSM9DS0* parent, lsm9ds0_read_func readFunc,
         lsm9ds0_get_event_func eventFunc, lsm9ds0_get_sensor_func sensorFunc):
         _parent(parent),
         _readFunc(readFunc),
