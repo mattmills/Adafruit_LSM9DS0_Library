@@ -11,6 +11,8 @@
 
   Written by Kevin Townsend for Adafruit Industries.
   BSD license, all text above must be included in any redistribution
+
+  FIFO and API extensions by Matt Mills, 2014. Same License.
  ***************************************************************************/
 #include <Adafruit_LSM9DS0.h>
 
@@ -64,7 +66,7 @@ Adafruit_LSM9DS0::Adafruit_LSM9DS0(int8_t clk, int8_t miso, int8_t mosi, int8_t 
   _tempSensor  = Sensor(this, &Adafruit_LSM9DS0::readTemp,  &Adafruit_LSM9DS0::getTempEvent,  &Adafruit_LSM9DS0::getTempSensor);
 }
 
-bool Adafruit_LSM9DS0::begin(bool continuous)
+bool Adafruit_LSM9DS0::begin()
 {
   if (_i2c) {
     Wire.beginOnPins(2,3);
