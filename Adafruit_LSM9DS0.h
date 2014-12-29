@@ -175,10 +175,12 @@ class Adafruit_LSM9DS0
 
     bool    begin       ( void );
     void    read        ( void );
-    void    readAccel   ( int8_t *output );
+    void    readAccel   ( void );
     void    readMag     ( void );
     void    readGyro    ( void );
     void    readTemp    ( void );
+    void    enableFIFO  ( void );
+    void    fifoSamples ( uint8_t *samples )
     void    setupAccel  ( lsm9ds0AccelRange_t range );
     void    setupMag    ( lsm9ds0MagGain_t gain );
     void    setupGyro   ( lsm9ds0GyroScale_t scale );
