@@ -1,3 +1,10 @@
+Matt's LSM9DS0 Library
+======================
+
+This is a fork of the Adafruit LSM9DS0 Library. It uses the FIFO buffer in the LSM9DS0 instead of a direct readout. Currently, it's 
+
+
+
 Adafruit LSM9DS0 Library
 ========================
 
@@ -8,11 +15,11 @@ Designed specifically to work with the Adafruit LSM9DS0 Breakout & Flora Sensor
   ----> https://www.adafruit.com/products/2021
 
 These sensors use I2C to communicate, 2 pins are required to interface
-Adafruit invests time and resources providing this open source code, 
-please support Adafruit and open-source hardware by purchasing 
+Adafruit invests time and resources providing this open source code,
+please support Adafruit and open-source hardware by purchasing
 products from Adafruit!
 
-Check out the links above for our tutorials and wiring diagrams 
+Check out the links above for our tutorials and wiring diagrams
 
 Written by Kevin Townsend for Adafruit Industries.  
 BSD license, all text above must be included in any redistribution

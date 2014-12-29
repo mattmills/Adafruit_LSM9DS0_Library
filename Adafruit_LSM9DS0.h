@@ -97,6 +97,7 @@ class Adafruit_LSM9DS0
       LSM9DS0_REGISTER_WHO_AM_I_XM         = 0x0F,
       LSM9DS0_REGISTER_INT_CTRL_REG_M      = 0x12,
       LSM9DS0_REGISTER_INT_SRC_REG_M       = 0x13,
+      LSM9DS0_REGISTER_CTRL_REG0_XM        = 0x1F,
       LSM9DS0_REGISTER_CTRL_REG1_XM        = 0x20,
       LSM9DS0_REGISTER_CTRL_REG2_XM        = 0x21,
       LSM9DS0_REGISTER_CTRL_REG5_XM        = 0x24,
@@ -108,6 +109,7 @@ class Adafruit_LSM9DS0
       LSM9DS0_REGISTER_OUT_Y_H_A           = 0x2B,
       LSM9DS0_REGISTER_OUT_Z_L_A           = 0x2C,
       LSM9DS0_REGISTER_OUT_Z_H_A           = 0x2D,
+      FIFO_SRC_REG		                     = 0x2F,
     } lsm9ds0MagAccelRegisters_t;
 
     typedef enum
@@ -166,14 +168,14 @@ class Adafruit_LSM9DS0
       float z;
     } lsm9ds0Vector_t;
 
-    lsm9ds0Vector_t accelData;    // Last read accelerometer data will be available here
+    lsm9ds0Vector_t accelData;    // Last read accelerometer data will be available here (or not! in fact, don't count on it)
     lsm9ds0Vector_t magData;      // Last read magnetometer data will be available here
     lsm9ds0Vector_t gyroData;     // Last read gyroscope data will be available here
     int16_t         temperature;  // Last read temperzture data will be available here
 
     bool    begin       ( void );
     void    read        ( void );
-    void    readAccel   ( void );
+    void    readAccel   ( int8_t *output );
     void    readMag     ( void );
     void    readGyro    ( void );
     void    readTemp    ( void );

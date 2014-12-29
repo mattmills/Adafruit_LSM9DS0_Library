@@ -84,13 +84,20 @@ bool Adafruit_LSM9DS0::begin()
   if (id != LSM9DS0_G_ID)
     return false;
 
-  // Enable the accelerometer continous
-  write8(XMTYPE, LSM9DS0_REGISTER_CTRL_REG1_XM, 0x57); // 50hz XYZ
+  c = read8(LSM9DS0_REGISTER_CTRL_REG0_XM);
+  write8(LSM9DS0_REGISTER_CTRL_REG0_XM , c | 0x40);    // Enable accelerometer FIFO
+  write8(XMTYPE, LSM9DS0_REGISTER_CTRL_REG1_XM, 0x57); // 50hz XYZ accelerometer
+
+  // temp sensor enable and mag resolution settings:
   write8(XMTYPE, LSM9DS0_REGISTER_CTRL_REG5_XM, 0b11110000);
-  // enable mag continuous
-  write8(XMTYPE, LSM9DS0_REGISTER_CTRL_REG7_XM, 0b00000000);
-  // disable gyro
-  write8(GYROTYPE, LSM9DS0_REGISTER_CTRL_REG1_G, 0x00); // turn it off to save power
+
+  // disable mag since we're not using it
+  // set to 0b00000000 to enable
+  write8(XMTYPE, LSM9DS0_REGISTER_CTRL_REG7_XM, 0b00000011);
+
+  // disable gyro to save power; it eats 7mA according to the datasheet. terrible!
+  write8(GYROTYPE, LSM9DS0_REGISTER_CTRL_REG1_G, 0x00);
+
   // enable the temperature sensor (output rate same as the mag sensor)
   uint8_t tempReg = read8(XMTYPE, LSM9DS0_REGISTER_CTRL_REG5_XM);
   write8(XMTYPE, LSM9DS0_REGISTER_CTRL_REG5_XM, tempReg | (1<<7));
@@ -117,33 +124,31 @@ bool Adafruit_LSM9DS0::begin()
 void Adafruit_LSM9DS0::read()
 {
   /* Read all the sensors. */
-  readAccel();
+  // readAccel();
   readMag();
   readGyro();
   readTemp();
 }
 
-void Adafruit_LSM9DS0::readAccel() {
-  // Read the accelerometer
-  byte buffer[6];
-  readBuffer(XMTYPE,
-       0x80 | LSM9DS0_REGISTER_OUT_X_L_A,
-       6, buffer);
+void Adafruit_LSM9DS0::readAccel(int8_t *samples) {
+  // Read the accelerometer (FIFO time!)
+  samples[0] = (xmReadByte(FIFO_SRC_REG) & 0x1F); // Read number of stored accelerometer samples
 
-  uint8_t xlo = buffer[0];
-  int16_t xhi = buffer[1];
-  uint8_t ylo = buffer[2];
-  int16_t yhi = buffer[3];
-  uint8_t zlo = buffer[4];
-  int16_t zhi = buffer[5];
+  for(int index = 1; index <= samples[0] ; index++) { // Read the accelerometer data stored in the FIFO
+    /* here, we read 6 bytes of data (16 bits x, 16 bits y, 16 bits z)
+    "The value is expressed in 16 bit as two’s complement left justified" -- the datasheet
+    two's compliment, for those about to google, is a way of expressing negative numbers without a sign bit. */
+    byte buffer[6];
+    readBuffer(XMTYPE,
+         0x80 | LSM9DS0_REGISTER_OUT_X_L_A,
+         6, buffer);
 
-  // Shift values to create properly formed integer (low byte first)
-  xhi <<= 8; xhi |= xlo;
-  yhi <<= 8; yhi |= ylo;
-  zhi <<= 8; zhi |= zlo;
-  accelData.x = xhi;
-  accelData.y = yhi;
-  accelData.z = zhi;
+    // then, we stick those numbers in an array of data that we'd like to return.
+    // these are also being converted to regular ints; makes math on the front end easier.
+    samples[index]   = (((int16_t)buffer[1] << 8) | buffer[0]);
+    samples[index*2] = (((int16_t)buffer[3] << 8) | buffer[2]);
+    samples[index*3] = (((int16_t)buffer[5] << 8) | buffer[4]);
+  }
 }
 
 void Adafruit_LSM9DS0::readMag() {
