@@ -1,9 +1,9 @@
 Matt's LSM9DS0 Library
 ======================
 
-This is a fork of the Adafruit LSM9DS0 Library. It uses the FIFO buffer in the LSM9DS0 instead of a direct readout. Currently, it's 
+This is a fork of the Adafruit LSM9DS0 Library. It uses the FIFO buffer in the LSM9DS0 instead of a direct readout. Currently, it's in-progress and breaks compatibility with the Sensor library; you get ints back instead of floats, and there are no units. Since I don't care about units for my projects, I don't bother with them here. This is super alpha, and the API may change without notice. The source files are the source of truth. A better C++ programmer could probably do this better; pull requests welcome, but I'll also be making improvements, hopefully. 
 
-
+My contributions are also © Matt Mills, released under the BSD license.
 
 Adafruit LSM9DS0 Library
 ========================
