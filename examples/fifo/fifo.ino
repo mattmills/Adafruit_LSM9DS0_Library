@@ -28,15 +28,17 @@ void setup()
 }
 
 void loop(){
-  uint8_t samples;
-  lsm.fifoSamples(&samples);
+  uint8_t samples = lsm.fifoSamples();
+
   Serial.print("Samples:"); Serial.print(samples);
   Serial.println("");
-  for (i=0; i<samples; i++){
-    lsm.read();
-    Serial.print("Accel X: "); Serial.print((int)lsm.accelData.x);   Serial.print(" ");
-    Serial.print("Accel Y: "); Serial.print((int)lsm.accelData.y);   Serial.print(" ");
-    Serial.print("Accel Z: "); Serial.println((int)lsm.accelData.z); Serial.print(" ");
+
+  for (uint8_t i=0; i<samples && i<32 ; i++){
+    sensors_event_t accel, mag, gyro, temp;
+
+    lsm.getEvent(&accel, &mag, &gyro, &temp);
+    // lsm.read();
+
   }
   delay(200);
 }

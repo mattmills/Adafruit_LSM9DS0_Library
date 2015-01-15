@@ -110,6 +110,7 @@ class Adafruit_LSM9DS0
       LSM9DS0_REGISTER_OUT_Z_L_A           = 0x2C,
       LSM9DS0_REGISTER_OUT_Z_H_A           = 0x2D,
       FIFO_SRC_REG		                     = 0x2F,
+      FIFO_CTRL_REG                        = 0x2E,
     } lsm9ds0MagAccelRegisters_t;
 
     typedef enum
@@ -180,7 +181,6 @@ class Adafruit_LSM9DS0
     void    readGyro    ( void );
     void    readTemp    ( void );
     void    enableFIFO  ( void );
-    void    fifoSamples ( uint8_t *samples )
     void    setupAccel  ( lsm9ds0AccelRange_t range );
     void    setupMag    ( lsm9ds0MagGain_t gain );
     void    setupGyro   ( lsm9ds0GyroScale_t scale );
@@ -188,6 +188,7 @@ class Adafruit_LSM9DS0
     byte    read8       ( boolean type, byte reg);
     byte    readBuffer  ( boolean type, byte reg, byte len, uint8_t *buffer);
     uint8_t spixfer     ( uint8_t data );
+    int     fifoSamples ( void );
 
     /* Adafruit Unified Sensor Functions (not standard yet ... the current base class only */
     /* supports one sensor type, and we need to update the unified base class to support   */

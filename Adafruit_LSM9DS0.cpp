@@ -84,16 +84,14 @@ bool Adafruit_LSM9DS0::begin()
   if (id != LSM9DS0_G_ID)
     return false;
 
-  c = read8(LSM9DS0_REGISTER_CTRL_REG0_XM);
-  write8(LSM9DS0_REGISTER_CTRL_REG0_XM , c | 0x40);    // Enable accelerometer FIFO
-  write8(XMTYPE, LSM9DS0_REGISTER_CTRL_REG1_XM, 0x57); // 50hz XYZ accelerometer
+  write8(XMTYPE, LSM9DS0_REGISTER_CTRL_REG0_XM, 0b00000000 );
+
+  write8(XMTYPE, LSM9DS0_REGISTER_CTRL_REG1_XM, 0b01011111); // 50hz XYZ accelerometer
 
   // temp sensor enable and mag resolution settings:
   write8(XMTYPE, LSM9DS0_REGISTER_CTRL_REG5_XM, 0b11110000);
 
-  // disable mag since we're not using it
-  // set to 0b00000000 to enable
-  write8(XMTYPE, LSM9DS0_REGISTER_CTRL_REG7_XM, 0b00000011);
+  write8(XMTYPE, LSM9DS0_REGISTER_CTRL_REG7_XM, 0b00000000);
 
   // disable gyro to save power; it eats 7mA according to the datasheet. terrible!
   write8(GYROTYPE, LSM9DS0_REGISTER_CTRL_REG1_G, 0x00);
@@ -131,9 +129,14 @@ void Adafruit_LSM9DS0::read()
 }
 
 
+int Adafruit_LSM9DS0::fifoSamples(){
+  return (int(read8(XMTYPE, FIFO_SRC_REG) & 0x1F));
+}
+
 void Adafruit_LSM9DS0::enableFIFO(){
-  c = read8(LSM9DS0_REGISTER_CTRL_REG0_XM);
-  write8(LSM9DS0_REGISTER_CTRL_REG0_XM , c | 0x40);    // Enable accelerometer FIFO
+  write8(XMTYPE, FIFO_CTRL_REG, 0b01111111);                // Enable FIFO and set watermark at 32 samples
+  write8(XMTYPE, LSM9DS0_REGISTER_CTRL_REG0_XM, 0b01100000 );  // Enable accelerometer FIFO
+  delay(20);                                                 // Wait for change to take effect
 }
 
 void Adafruit_LSM9DS0::readAccel() {
@@ -160,10 +163,6 @@ void Adafruit_LSM9DS0::readAccel() {
   accelData.x = xhi;
   accelData.y = yhi;
   accelData.z = zhi;
-}
-
-void Adafruit_LSM9DS0::fifoSamples(uint8_t *samples){
-  samples = (xmReadByte(FIFO_SRC_REG) & 0x1F);
 }
 
 
